@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><body>
 <style>
-    text.label_svBhxNMs {
+    text.label_HSDDWnKi {
         text-anchor: middle;
         font-size: 8px;
         font-family: Arial, Helvetica, sans-serif;
@@ -10,21 +10,21 @@
         stroke-width: 0.1px;
         opacity: 1.0;
     }
-    .links_svBhxNMs line {
+    .links_HSDDWnKi line {
     stroke-opacity: 1.0;
     }
     .arrows svg:path {
         stroke: #666;
     }
-    .nodes_svBhxNMs circle {
+    .nodes_HSDDWnKi circle {
     stroke: #fff;
     stroke-width: 0.5px;
     }
 </style>
 
-<svg width="400" height="400" id="svBhxNMs">        
+<svg width="400" height="400" id="HSDDWnKi">        
     <text x="20" y="20" font-family="sans-serif" font-size="14px" fill="#666" style="cursor: pointer"
-        id='svBhxNMs_svg_txt'>[save svg]</text>
+        id='HSDDWnKi_svg_txt'>[save svg]</text>
 </svg>
 
 <script charset="utf-8" src="https://d3js.org/d3.v4.min.js"></script>
@@ -62,7 +62,7 @@ catch(err){
 
 // wait until d3js has been loaded
 require(["d3"], function(d3) {
-    var svg = d3.select("#"+"svBhxNMs"), radius = 6, width = +svg.attr("width"), height = +svg.attr("height");
+    var svg = d3.select("#"+"HSDDWnKi"), radius = 6, width = +svg.attr("width"), height = +svg.attr("height");
 
     var color = d3.scaleOrdinal(d3.schemeCategory20);
 
@@ -96,7 +96,7 @@ require(["d3"], function(d3) {
         .attr("class", "everything");
 
     var link = g.append("g")
-        .attr("class", "links_svBhxNMs")
+        .attr("class", "links_HSDDWnKi")
         .selectAll("line")
         .data(graph.links)
         .enter().append("line")
@@ -107,7 +107,7 @@ require(["d3"], function(d3) {
         link.attr("marker-end", "url(#end)");
 
     var node_g = g.append("g")
-        .attr("class", "nodes_svBhxNMs")
+        .attr("class", "nodes_HSDDWnKi")
         .selectAll("circle")
         .data(graph.nodes)
         .enter()
@@ -126,7 +126,7 @@ require(["d3"], function(d3) {
     .attr("x", [0, -10][0])
     .attr("y", [0, -10][1]+3)
     .attr("id", function(d) {return d.id; })
-    .attr("class", "label_svBhxNMs")
+    .attr("class", "label_HSDDWnKi")
     .text(function(d) { return d.id; });
 
     node.append("title")
@@ -137,7 +137,7 @@ require(["d3"], function(d3) {
     zoom_handler(svg);
 
     // attach event handler for svg export
-    d3.select('#svBhxNMs_svg_txt').on("click", save_svg);
+    d3.select('#HSDDWnKi_svg_txt').on("click", save_svg);
 
     simulation
         .nodes(graph.nodes)
@@ -189,13 +189,13 @@ require(["d3"], function(d3) {
 
     function to_svg() {
         // Returns a SVG representation of the current state of the visualisation
-	    var svg  = document.getElementById('svBhxNMs');
+	    var svg  = document.getElementById('HSDDWnKi');
 	    var xml = (new XMLSerializer).serializeToString(svg);
         return xml;
     }
 
     function save_svg() {
-        var svg  = document.getElementById('svBhxNMs');
+        var svg  = document.getElementById('HSDDWnKi');
         var xml = (new XMLSerializer).serializeToString(svg);        
         var blob = new Blob([xml], {type: 'text/xml'});
         if(window.navigator.msSaveOrOpenBlob) {

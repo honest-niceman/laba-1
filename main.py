@@ -1,8 +1,10 @@
 import pathpy as pp
+import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
 # %% Networks objects
+
 n1 = pp.Network()
 print(n1)
 
@@ -144,4 +146,61 @@ print(n)
 
 pp.visualisation.export_html(n, filename='3.html', **params)
 
+
 # %% My task
+
+class Graph_struct:
+    def __init__(self, Nodes):
+        self.Nodes = Nodes
+        self.adj = [[] for i in range(Nodes)]
+
+    def DFS_Utililty(self, temp, v, visited):
+        visited[v] = True
+        temp.append(v)
+        for i in self.adj[v]:
+            if visited[i] == False:
+                temp = self.DFS_Utililty(temp, i, visited)
+        return temp
+
+    def add_edge(self, v, w):
+        self.adj[v].append(w)
+        self.adj[w].append(v)
+
+    def connected_components(self):
+        visited = []
+        conn_compnent = []
+        for i in range(self.Nodes):
+            visited.append(False)
+        for v in range(self.Nodes):
+            if visited[v] == False:
+                temp = []
+                conn_compnent.append(self.DFS_Utililty(temp, v, visited))
+        return conn_compnent
+
+
+n = pp.Network(directed=False)
+n.add_edge('a', 'b')
+n.add_edge('b', 'd')
+n.add_edge('a', 'e')
+n.add_edge('a', 'd')
+n.add_edge('d', 'e')
+n.add_edge('d', 'f')
+n.add_edge('e', 'f')
+
+n.add_edge('б', 'д')
+n.add_edge('д', 'ж')
+n.add_edge('ж', 'ц')
+
+pp.visualisation.export_html(n, filename='myNetwork.html', **params)
+
+my_instance = Graph_struct(len(n.adjacency_matrix().toarray()))
+
+import re
+
+for match in re.findall(r'(?<=\().*?(?=\))', str(n.adjacency_matrix())):
+    a, b = map(float, match.split(','))
+    my_instance.add_edge(int(a), int(b))
+
+conn_comp = my_instance.connected_components()
+print("The connected components are :")
+print(conn_comp)
