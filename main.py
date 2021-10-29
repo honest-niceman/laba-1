@@ -1,5 +1,4 @@
 import pathpy as pp
-import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -146,37 +145,7 @@ print(n)
 
 pp.visualisation.export_html(n, filename='3.html', **params)
 
-
 # %% My task
-
-class Graph_struct:
-    def __init__(self, Nodes):
-        self.Nodes = Nodes
-        self.adj = [[] for i in range(Nodes)]
-
-    def DFS_Utililty(self, temp, v, visited):
-        visited[v] = True
-        temp.append(v)
-        for i in self.adj[v]:
-            if visited[i] == False:
-                temp = self.DFS_Utililty(temp, i, visited)
-        return temp
-
-    def add_edge(self, v, w):
-        self.adj[v].append(w)
-        self.adj[w].append(v)
-
-    def connected_components(self):
-        visited = []
-        conn_compnent = []
-        for i in range(self.Nodes):
-            visited.append(False)
-        for v in range(self.Nodes):
-            if visited[v] == False:
-                temp = []
-                conn_compnent.append(self.DFS_Utililty(temp, v, visited))
-        return conn_compnent
-
 
 n = pp.Network(directed=False)
 n.add_edge('a', 'b')
@@ -193,14 +162,42 @@ n.add_edge('ж', 'ц')
 
 pp.visualisation.export_html(n, filename='myNetwork.html', **params)
 
-my_instance = Graph_struct(len(n.adjacency_matrix().toarray()))
 
-import re
+def dfs(A, temp, v, visited):
+    print("Recursion started with params:\n" + str(A) + "\n" + str(temp) + "\n" + str(v) + "\n" + str(visited))
+    visited[int(v)] = True
+    temp.append(int(v))
+    print("Now temp is " + str(temp))
 
-for match in re.findall(r'(?<=\().*?(?=\))', str(n.adjacency_matrix())):
-    a, b = map(float, match.split(','))
-    my_instance.add_edge(int(a), int(b))
+    for i in A[int(v)]:
+        print(str(i) + " element of row " + str(v))
+        if not visited[int(i)]:
+            print(str(i) + " element of row " + str(v) + "is not visited")
+            print("Deep into recursion from recursion")
+            temp = dfs(A, temp, i, visited)
+    return temp
 
-conn_comp = my_instance.connected_components()
-print("The connected components are :")
-print(conn_comp)
+
+def connected_components(network):
+    visited = []
+    conn_component = []
+    A = network.adjacency_matrix().toarray()
+
+    print("Matrix:\n" + str(A))
+
+    for i in range(network.nodes.__len__()):
+        visited.append(False)
+
+    print("Visited list of nodes:\n" + str(visited))
+
+    for v in range(network.nodes.__len__()):
+        print("Node №" + str(v))
+        if not visited[int(v)]:
+            print("Node №" + str(v) + " is not visited")
+            temp = []
+            print("Deep into recursion")
+            conn_component.append(dfs(A, temp, v, visited))
+    return conn_component
+
+
+print(connected_components(n))
