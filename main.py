@@ -150,32 +150,32 @@ pp.visualisation.export_html(n, filename='3.html', **params)
 # %% My task
 
 class Graph_struct:
-    def __init__(self, Nodes):
-        self.Nodes = Nodes
-        self.adj = [[] for i in range(Nodes)]
+    def __init__(self, nodes):
+        self.nodes = nodes
+        self.references = [[] for i in range(nodes)]
 
-    def DFS_Utililty(self, temp, v, visited):
-        visited[v] = True
-        temp.append(v)
-        for i in self.adj[v]:
-            if visited[i] == False:
-                temp = self.DFS_Utililty(temp, i, visited)
+    def dfs(self, temp, node, visited):
+        visited[node] = True
+        temp.append(node)
+        for i in self.references[node]:
+            if not visited[i]:
+                temp = self.dfs(temp, i, visited)
         return temp
 
-    def add_edge(self, v, w):
-        self.adj[v].append(w)
-        self.adj[w].append(v)
+    def add_edge(self, a, b):
+        self.references[a].append(b)
+        self.references[b].append(a)
 
     def connected_components(self):
         visited = []
-        conn_compnent = []
-        for i in range(self.Nodes):
+        connected_components = []
+        for i in range(self.nodes):
             visited.append(False)
-        for v in range(self.Nodes):
-            if visited[v] == False:
+        for v in range(self.nodes):
+            if not visited[v]:
                 temp = []
-                conn_compnent.append(self.DFS_Utililty(temp, v, visited))
-        return conn_compnent
+                connected_components.append(self.dfs(temp, v, visited))
+        return connected_components
 
 
 n = pp.Network(directed=False)
