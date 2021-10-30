@@ -61,8 +61,26 @@ if __name__ == "__main__":
 
     params = {'label_color': '#ff0400',
               'label_size': '20',
-              'node_color': {'a': '#ff0000', 'b': '#00ff00', 'c': '#0d00ff'},
-              'node_size': {'a': '5', 'b': '10', 'c': '20'}
+              'node_color': {
+                  'a': '#ff0000',
+                  'b': '#00ff00',
+                  'd': '#362f8a',
+                  'c': '#f68e1e',
+                  'а': '#0d00ff',
+                  'б': '#f68e1e',
+                  'в': '#00ff00',
+                  'г': '#362f8a',
+              },
+              'node_size': {
+                  'a': '5',
+                  'b': '10',
+                  'c': '20',
+                  'd': '12',
+                  'а': '14',
+                  'б': '7',
+                  'в': '3',
+                  'г': '2'
+              }
               }
 
     pp.visualisation.export_html(n, filename='myNetwork.html', **params)
