@@ -139,65 +139,93 @@ params = {'label_color': '#ff0400',
 
 pp.visualisation.export_html(nx, filename='2.html', **params)
 
-n = pp.Network()
-n.add_edge(('a', 'b'), ('a', 'c'))
-print(n)
+class Graph:
+    # init function to declare class variables
+    def __init__(self, V, A):
+        self.V = V
+        self.adj = A
 
-pp.visualisation.export_html(n, filename='3.html', **params)
+    def dfs(self, temp, v, visited):
+        # Mark the current vertex as visited
+        visited[v] = True
+        # Store the vertex to list
+        temp.append(v)
+        # Repeat for all vertices adjacent
+        # to this vertex v
+        for i in self.adj[v]:
+            if not visited[i]:
+                # Update the list
+                temp = self.dfs(temp, i, visited)
+        return temp
 
-# %% My task
-
-n = pp.Network(directed=False)
-n.add_edge('a', 'b')
-n.add_edge('b', 'd')
-n.add_edge('a', 'e')
-n.add_edge('a', 'd')
-n.add_edge('d', 'e')
-n.add_edge('d', 'f')
-n.add_edge('e', 'f')
-
-n.add_edge('б', 'д')
-n.add_edge('д', 'ж')
-n.add_edge('ж', 'ц')
-
-pp.visualisation.export_html(n, filename='myNetwork.html', **params)
-
-
-def dfs(A, temp, v, visited):
-    print("Recursion started with params:\n" + str(A) + "\n" + str(temp) + "\n" + str(v) + "\n" + str(visited))
-    visited[int(v)] = True
-    temp.append(int(v))
-    print("Now temp is " + str(temp))
-
-    for i in A[int(v)]:
-        print(str(i) + " element of row " + str(v))
-        if not visited[int(i)]:
-            print(str(i) + " element of row " + str(v) + "is not visited")
-            print("Deep into recursion from recursion")
-            temp = dfs(A, temp, i, visited)
-    return temp
+    # Method to retrieve connected components
+    # in an undirected graph
+    def connectedComponents(self):
+        visited = []
+        connected_components = []
+        for i in range(self.V):
+            visited.append(False)
+        for v in range(self.V):
+            if not visited[v]:
+                temp = []
+                connected_components.append(self.dfs(temp, v, visited))
+        return connected_components
 
 
-def connected_components(network):
-    visited = []
-    conn_component = []
-    A = network.adjacency_matrix().toarray()
-
-    print("Matrix:\n" + str(A))
-
-    for i in range(network.nodes.__len__()):
-        visited.append(False)
-
-    print("Visited list of nodes:\n" + str(visited))
-
-    for v in range(network.nodes.__len__()):
-        print("Node №" + str(v))
-        if not visited[int(v)]:
-            print("Node №" + str(v) + " is not visited")
+# Driver Code
+if __name__ == "__main__":
+    # получаю список списков.
+    # где первый список это список элементов на которые ссылается первый элемент
+    # второй где список это список элементов на которые ссылается первый элемент
+    # и т.д.
+    def connected_for_each_node(network):
+        A = []
+        for row in range(network.adjacency_matrix().toarray().shape[0]):
             temp = []
-            print("Deep into recursion")
-            conn_component.append(dfs(A, temp, v, visited))
-    return conn_component
+            for col in range(network.adjacency_matrix().toarray().shape[0]):
+                if network.adjacency_matrix().toarray()[row][col] != 0:
+                    temp.append(col)
+            A.append(temp)
+        return A
 
 
-print(connected_components(n))
+    n = pp.Network(directed=False)
+    n.add_edge('a', 'd')
+    n.add_edge('b', 'c')
+    n.add_edge('c', 'd')
+
+    n.add_edge('а', 'б')
+    n.add_edge('в', 'г')
+
+    params = {'label_color': '#ff0400',
+              'label_size': '20',
+              'node_color': {
+                  'a': '#ff0000',
+                  'b': '#00ff00',
+                  'd': '#362f8a',
+                  'c': '#f68e1e',
+                  'а': '#0d00ff',
+                  'б': '#f68e1e',
+                  'в': '#00ff00',
+                  'г': '#362f8a',
+              },
+              'node_size': {
+                  'a': '5',
+                  'b': '10',
+                  'c': '20',
+                  'd': '12',
+                  'а': '14',
+                  'б': '7',
+                  'в': '3',
+                  'г': '2'
+              }
+              }
+
+    pp.visualisation.export_html(n, filename='myNetwork.html', **params)
+
+    # Создаю свою
+    g = Graph(n.adjacency_matrix().shape[0], connected_for_each_node(n))
+
+    cc = g.connectedComponents()
+    print("Following are connected components")
+    print(cc)
